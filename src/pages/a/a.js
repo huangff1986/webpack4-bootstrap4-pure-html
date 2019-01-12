@@ -7,3 +7,7 @@ $(function () {
     $('[data-toggle="popover"]').popover()
 })
   
+if (module.hot) {
+    module.hot.accept()
+}
+    

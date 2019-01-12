@@ -1,7 +1,6 @@
 const path = require('path');
 const glob = require('glob');
 
-const cleanWebpackPlugin = require('clean-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
@@ -30,7 +29,7 @@ glob.sync('src/pages/*/*.js').forEach((page)=> {
 
 
 module.exports = {
-    mode: 'development',
+
     entry,
     output: {
         filename: 'static/js/[name].js',
@@ -46,11 +45,16 @@ module.exports = {
                     'css-loader',
                     'sass-loader'
                 ]
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    'raw-loader'
+                ]
             }
         ]
     },
     plugins: [
-        new cleanWebpackPlugin(['dist']),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
