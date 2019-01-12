@@ -1,5 +1,5 @@
 import 'bootstrap';
-import './a.scss';
+import './b.scss';
 
 
 $(function () {

@@ -1,7 +1,22 @@
 const path = require('path');
+const golb = require('glob');
+
 const cleanWebpackPlugin = require('clean-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+
+/**
+ * 获取入口
+ */
+
+function getEntry() 
+{
+    let entry = [];
+
+    var files = glob.sync(path.resolve(__dirname, 'src/pages/*/*.js'))
+
+    console.log(files);
+}
 
 module.exports = {
     mode: 'development',
