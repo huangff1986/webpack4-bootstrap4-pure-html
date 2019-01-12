@@ -1,5 +1,5 @@
 const path = require('path');
-const golb = require('glob');
+const glob = require('glob');
 
 const cleanWebpackPlugin = require('clean-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
@@ -12,15 +12,36 @@ const webpack = require('webpack');
 function getEntry() 
 {
     let entry = [];
+    entry = glob.sync(path.resolve(__dirname, 'src/pages/*/*.js'))
 
-    var files = glob.sync(path.resolve(__dirname, 'src/pages/*/*.js'))
+    return entry;
+}
 
-    console.log(files);
+/**
+ * 入口文件与html文件匹配
+ */
+function getHtmlWebpackPlugins()
+{
+    let htmlWebpackPlugins = [];
+    let entry = getEntry();
+    
+    entry.foreach((page)=> {
+        let entryChunkName = page.split('/')[page.split('/').length-1].split('.')[0];
+        let entryTemplateHtml = page.slice(0,-3) + '.html';
+
+        htmlWebpackPlugin.push(
+            new htmlWebpackPlugin({
+                template: entryTemplateHtml,
+                chunks: [entryChunkName],
+                filename: 'static/js/[name].js'
+            })
+        )
+    })
 }
 
 module.exports = {
     mode: 'development',
-    entry: './src/pages/index.js',
+    entry: getEntry(),
     output: {
         filename: 'static/js/[name].js',
         path: path.resolve(__dirname, 'dist'),
@@ -40,14 +61,12 @@ module.exports = {
     },
     plugins: [
         new cleanWebpackPlugin(['dist']),
-        new htmlWebpackPlugin({
-            template: path.resolve(__dirname, 'src/pages/index.html')
-        }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
             'window.jquery': 'jquery',
             Popper: ['popper.js','default']
-        })
+        }),
+        ...getHtmlWebpackPlugins()
     ]
 }

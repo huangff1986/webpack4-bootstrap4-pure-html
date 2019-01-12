@@ -4,7 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack webpack.config.base.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/huangff1986/webpack4-bootstrap4-pure-html#readme",
   "devDependencies": {
     "glob": "^7.1.3",
+    "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-merge": "^4.2.1"
