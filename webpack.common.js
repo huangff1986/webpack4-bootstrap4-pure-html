@@ -28,7 +28,6 @@ glob.sync('src/pages/*/*.js').forEach((page)=> {
     )
 })
 
-console.log(entry)
 
 module.exports = {
     mode: 'development',
