@@ -27,6 +27,7 @@ glob.sync('src/pages/*/*.js').forEach((page)=> {
     )
 })
 
+console.log(process.env.NODE_ENV)
 
 module.exports = {
 
@@ -47,7 +48,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.html$/,
+                test: /\.(htm|html)$/,
                 use: [
                     'raw-loader'
                 ]
