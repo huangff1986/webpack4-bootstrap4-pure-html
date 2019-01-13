@@ -95,7 +95,7 @@ module.exports = {
             {
                 test: /\.(htm|html)$/,
                 use: [
-                    'raw-loader'
+                    'html-loader'
                 ]
             },
             {
