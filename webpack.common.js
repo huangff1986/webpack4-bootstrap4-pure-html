@@ -3,6 +3,9 @@ const glob = require('glob');
 
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isProd = (process.env.NODE_ENV === 'prod');
 
 /**
  * 获取入口
@@ -21,8 +24,9 @@ glob.sync('src/pages/*/*.js').forEach((page)=> {
     htmlWebpackPlugins.push(
         new htmlWebpackPlugin({
             template: entryTemplateHtml,
-            chunks: [entryName],
-            filename: `${entryName}.html`
+            chunks: isProd ? [entryName, 'vendors'] : [entryName] ,
+            filename: `${entryName}.html`,
+            inject: true
         })
     )
 })
@@ -40,18 +44,70 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: /\.(css)$/,
                 use: [
-                    'style-loader',
-                    'css-loader',
+                    isProd ? ({
+                    loader: MiniCssExtractPlugin.loader,
+                    options: {
+                        publicPath: '../'
+                    }}) 
+                    : 
+                    'style-loader', 
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.(scss)$/,
+                use: [
+                    isProd ? ({
+                    loader: MiniCssExtractPlugin.loader,
+                    options: {
+                        publicPath: '../'
+                    }
+                    }) : 'style-loader', 
+                    
+                    'css-loader', 
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: function () {
+                                return [
+                                    require('autoprefixer')
+                                ];
+                            }
+                        }
+                    }, 
                     'sass-loader'
                 ]
+            },
+            {
+                test: /\.(png|jpg|jpe?g|gif)$/,
+                use: ['url-loader?limit=4096&name=[name]' + (isProd ? '.[hash:8]' : '') + '.[ext]&outputPath=static/img/', 'image-webpack-loader']
+            },
+            {
+                test: /\.(webp)$/,
+                use: ['file-loader?&name=[name]' + (isProd ? '.[hash:8]' : '') + '.[ext]&outputPath=static/img/']
+            },
+            {
+                test: /\.(svg|woff|woff2|ttf|eot)(\?.*$|$)/,
+                loader: 'file-loader?name=static/font/[name].[hash:8].[ext]'
             },
             {
                 test: /\.(htm|html)$/,
                 use: [
                     'raw-loader'
                 ]
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015-nostrict'],
+                        plugins: ['transform-runtime']
+                    }
+                }
             }
         ]
     },
@@ -61,6 +117,10 @@ module.exports = {
             jQuery: 'jquery',
             'window.jquery': 'jquery',
             Popper: ['popper.js','default']
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'static/css/[name].[contenthash:8].css',
+            chunkFilename: 'static/css/[name].chunk.[contenthash:8].css',
         }),
         ...htmlWebpackPlugins
     ]
