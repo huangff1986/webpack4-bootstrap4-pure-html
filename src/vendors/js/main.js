@@ -1,19 +1,3 @@
-// 引入bootstrap源码样式
-import 'bootstrap/scss/bootstrap.scss';
-// 引入bootstrap js 部分
-import 'bootstrap';
-// 引入动画样式
-import '../../vendors/css/animate.css';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel';
-import '../../vendors/css/icomoon.css';
-import '../../vendors/js/jquery.easing.1.3';
-import '../../vendors/js/jquery.waypoints.min.js';
-import '../../vendors/js/jquery.animateNumber.min.js';
-import './a.html'; //热更新用
-import './a.scss';
-
-
 $(document).ready(function($) {
 
 	"use strict";
@@ -27,6 +11,7 @@ $(document).ready(function($) {
 		}, 1);
 	};
 	loader();
+
 	var carousel = function() {
 		$('.owl-carousel').owlCarousel({
 			loop: true,
@@ -50,8 +35,7 @@ $(document).ready(function($) {
 	};
 	carousel();
 
-    // scroll
-    // 导航部分的滚动监听
+	// scroll
 	var scrollWindow = function() {
 		$(window).scroll(function(){
 			var $w = $(this),
